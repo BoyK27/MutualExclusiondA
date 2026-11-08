@@ -1,17 +1,6 @@
 OmniSync - Centralized Mutual Exclusion GUI
 
 A professional, high-end dark-mode web application built with HTML5, Tailwind CSS, and Vanilla JavaScript (ES6+) following a modular file structure. This interface serves as the frontend client for a Distributed Mutual Exclusion Algorithm (Centralized Coordinator model), designed for academic demonstrations and live project presentations.
-📁 Project Folder Structure
-
-mutex-visualizer/
-├── index.html              # Main GUI layout (Coordinator panel, 3 client cards, terminal)
-├── README.md               # Summary documentation and setup guide
-└── assets/
-    ├── css/
-    │   └── custom.css      # Custom scrollbars, animations, and modal display rules
-    └── js/
-        ├── api.js          # REST API integration layer (connects to backend endpoints)
-        └── app.js          # UI state controller, event handlers, and pop-up modal logic
 
 🚀 Key Features & Components
 
