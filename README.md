@@ -1,9 +1,10 @@
 # MutualExclusiondA
+
 OmniSync - Centralized Mutual Exclusion GUI
 
 A professional, high-end dark-mode web application built with HTML5, Tailwind CSS, and Vanilla JavaScript (ES6+) following a modular file structure. This interface serves as the frontend client for a Distributed Mutual Exclusion Algorithm (Centralized Coordinator model), designed for academic demonstrations and live project presentations.
 
-🚀 Key Features & Components
+Key Features & Components
 
     Coordinator Panel (Top Bar):
         Displays real-time system status (RUNNING or CRASHED).
@@ -43,4 +44,3 @@ A professional, high-end dark-mode web application built with HTML5, Tailwind CS
 
     Ensure your backend server is running locally on port 5000.
     Open index.html directly in any modern browser, or serve the folder using a local development tool like VS Code Live Server.
-
