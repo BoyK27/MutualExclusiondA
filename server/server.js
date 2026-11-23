@@ -2,14 +2,16 @@ const express = require("express");
 const cors = require("cors");
 
 const app = express();
-const PORT = 5000;
 
 app.use(express.json());
-
 app.use(cors());
 
+// Static files are served by Vercel (outputDirectory in vercel.json).
+// When running locally with `npm start`, we still serve them from Express.
 const path = require("path");
-app.use(express.static(path.join(__dirname, "..", "ME(GUI)")));
+if (require.main === module) {
+  app.use(express.static(path.join(__dirname, "..", "ME(GUI)")));
+}
 
 // ── Coordinator State ─────────────────────────────────────────
 
@@ -155,14 +157,22 @@ app.post("/api/reset", (req, res) => {
   });
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`\n  Runs at http://localhost:${PORT}`);
-  console.log(
-    `  Open http://localhost:${PORT} in your browser to load the GUI.`,
-  );
-  console.log(`\n  API Endpoints:`);
-  console.log(`    POST /api/client/:clientId/request`);
-  console.log(`    POST /api/coordinator/crash`);
-  console.log(`    POST /api/reset\n`);
-});
+// ── Local vs Vercel ───────────────────────────────────────────
+// When run directly with `node server.js` or `npm start` → start
+// an HTTP server on port 5000 (local development).
+// When imported by Vercel as a serverless function → export the
+// Express app object (Vercel calls it like a function per request).
+if (require.main === module) {
+  const PORT = 5000;
+  app.listen(PORT, () => {
+    console.log(`\n  Runs at http://localhost:${PORT}`);
+    console.log(`  Open http://localhost:${PORT} in your browser to load the GUI.`);
+    console.log(`\n  API Endpoints:`);
+    console.log(`    POST /api/client/:clientId/request`);
+    console.log(`    POST /api/coordinator/crash`);
+    console.log(`    POST /api/reset\n`);
+  });
+} else {
+  // Vercel serverless: export the app so Vercel can call it.
+  module.exports = app;
+}
