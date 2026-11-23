@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OmniSync – Mutual Exclusion Visualizer</title>
+    <link rel="stylesheet" href="assets/css/custom.css" />
+  </head>
+  <body>
+    <div class="app-wrap">
+      <!-- ══ Top Bar ═══════════════════════════════════════════════ -->
+      <header
+        class="flex flex-col md:flex-row justify-center items-center bg-cardBg border border-cardBorder px-6 py-4 rounded-xl shadow-lg gap-4"
+      >
+        <h2 class="text-white text-3xl font-bold text-center">
+          Mutual Exclusion Simulator Visualizer
+        </h2>
+      </header>
+
+      <!-- ══ Main Grid ═════════════════════════════════════════════ -->
+      <div class="main-grid">
+        <!-- Left column -->
+        <div class="col-left">
+          <!-- Simulation Controls -->
+          <div class="card">
+            <div class="flex-between" style="margin-bottom: 14px">
+              <p
+                class="section-label"
+                style="border: none; padding: 0; margin: 0"
+              >
+                Simulation Controls
+              </p>
+              <span id="simStateBadge" class="sim-badge paused">Paused</span>
+            </div>
+
+            <div class="ctrl-row">
+              <button id="toggleSimBtn" class="btn btn-green" style="flex: 1">
+                Start Sim
+              </button>
+              <button id="resetSimBtn" class="btn btn-ghost">Reset</button>
+            </div>
+
+            <div style="border-top: 1px solid #1a1a1a; padding-top: 12px">
+              <div class="info-row">
+                <span>Algorithm</span>
+                <span>Centralized Coordinator</span>
+              </div>
+              <div class="info-row">
+                <span>Simulation Speed</span>
+                <span>1.0x Normal</span>
+              </div>
+              <div class="info-row">
+                <span>Backend URL</span>
+                <span>localhost:5000</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Critical Section Monitor -->
+          <div class="card">
+            <p class="section-label">Critical Section (CS)</p>
+
+            <div class="cs-box">
+              <div id="lockIconContainer" class="lock-tag unlocked">
+                UNLOCKED
+              </div>
+              <p id="csStatusTitle" class="cs-title">Resource Unlocked</p>
+              <p id="csStatusDesc" class="cs-desc">
+                Waiting for client request or mutex acquisition.
+              </p>
+            </div>
+
+            <div class="metrics-grid">
+              <div class="metric-box">
+                <div class="metric-label">Active Holder</div>
+                <div id="activeHolderVal" class="metric-value">None</div>
+              </div>
+              <div class="metric-box">
+                <div class="metric-label">Queue Length</div>
+                <div id="queueLengthVal" class="metric-value">0 Clients</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /col-left -->
+
+        <!-- Right column -->
+        <div class="col-right">
+          <!-- Competing Clients -->
+          <div class="card">
+            <div class="panel-header">
+              <p
+                class="section-label"
+                style="border: none; padding: 0; margin: 0"
+              >
+                Competing Processes — 3 Clients + Coordinator
+              </p>
+              <button id="crashCoordinatorBtn" class="btn btn-red">
+                Crash Coordinator
+              </button>
+            </div>
+
+            <div class="client-grid">
+              <!-- Client 1 -->
+              <div class="client-card">
+                <div class="flex-between">
+                  <span class="client-pid">P1 · PID:1001</span>
+                </div>
+                <p class="client-name">Client-1</p>
+                <div id="client1Badge" class="status-badge idle">
+                  Ready / Waiting
+                </div>
+                <button
+                  data-client="Client-1"
+                  class="clientReqBtn btn btn-white btn-full"
+                >
+                  Request Access
+                </button>
+              </div>
+
+              <!-- Client 2 -->
+              <div class="client-card">
+                <div class="flex-between">
+                  <span class="client-pid">P2 · PID:1002</span>
+                </div>
+                <p class="client-name">Client-2</p>
+                <div id="client2Badge" class="status-badge idle">
+                  Ready / Waiting
+                </div>
+                <button
+                  data-client="Client-2"
+                  class="clientReqBtn btn btn-white btn-full"
+                >
+                  Request Access
+                </button>
+              </div>
+
+              <!-- Client 3 -->
+              <div class="client-card">
+                <div class="flex-between">
+                  <span class="client-pid">P3 · PID:1003</span>
+                </div>
+                <p class="client-name">Client-3</p>
+                <div id="client3Badge" class="status-badge idle">
+                  Ready / Waiting
+                </div>
+                <button
+                  data-client="Client-3"
+                  class="clientReqBtn btn btn-white btn-full"
+                >
+                  Request Access
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live State Transition Console -->
+          <div class="card">
+            <div class="log-header">
+              <span class="log-label">▸ Live State Transition Console</span>
+              <button
+                id="clearLogBtn"
+                class="btn btn-ghost"
+                style="padding: 4px 10px"
+              >
+                Clear Log
+              </button>
+            </div>
+            <div id="logTerminal" class="log-terminal">
+              <div>
+                [System]: Centralized coordinator &amp; 3 clients initialized.
+                Ready to simulate.
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /col-right -->
+      </div>
+      <!-- /main-grid -->
+    </div>
+    <!-- /app-wrap -->
+
+    <!-- ══ Modal Overlay ════════════════════════════════════════════ -->
+    <div id="customModal">
+      <div class="modal-box">
+        <div class="modal-title-row">
+          <h3 id="modalTitle" class="modal-title">Notification</h3>
+          <button id="modalCloseX" class="modal-close-x">&times;</button>
+        </div>
+        <div id="modalBody" class="modal-body">Modal content goes here...</div>
+        <div class="modal-footer">
+          <button
+            id="modalCancelBtn"
+            class="btn btn-ghost"
+            style="display: none"
+          >
+            Cancel
+          </button>
+          <button id="modalConfirmBtn" class="btn btn-green">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Application Scripts -->
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/app.js"></script>
+  </body>
+</html>
