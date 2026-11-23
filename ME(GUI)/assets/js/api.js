@@ -3,7 +3,10 @@
  * All mock data removed. Communicates directly with backend server.
  */
 const API_CONFIG = {
-  baseUrl: 'http://localhost:5000/api',
+  // Relative URL works in both environments:
+  //   Local  → served from http://localhost:5000, so /api hits the same server.
+  //   Vercel → served from https://your-app.vercel.app, so /api hits the same domain.
+  baseUrl: '/api',
 };
 
 const MutexAPI = {
